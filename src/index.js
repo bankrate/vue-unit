@@ -188,6 +188,19 @@ export function fakeGetters (getterName, returns) {
   return stub
 }
 
+export function fakeMutations (mutationName, returns) {
+  if (typeof mutationName === 'object') {
+    Object.keys(mutationName).forEach(key => {
+      fakeMutations(key, mutationName[key])
+    })
+    return
+  }
+  const stub = sinon.stub()
+  if (returns) stub.returns(returns)
+  mutations[mutationName] = () => stub()
+  return stub
+}
+
 function buildFakeStore () {
   let Vuex
 
